@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VAM Calculator</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>VAM Calculator</h1>
+
+<p class="module-description">
+  Calculate VAM, or vertical ascent in meters per hour. VAM is widely used in
+  cycling to quantify climbing performance independently of climb length.
+</p>
+
+<p><a href="../modules/cycling-specific.html">← Back to Cycling Specific</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+VAM = 3600 \frac{\Delta h}{t}
+\]
+
+<hr>
+
+<label>Elevation gain \(\Delta h\) (m):</label>
+<input id="dh" type="number" step="any">
+
+<label>Time (minutes):</label>
+<input id="minutes" type="number" step="any">
+
+<label>Time (seconds):</label>
+<input id="seconds" type="number" step="any" value="0">
+
+<button onclick="calculate()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calculate() {
+  const dh = parseFloat(document.getElementById("dh").value);
+  const minutes = parseFloat(document.getElementById("minutes").value);
+  const seconds = parseFloat(document.getElementById("seconds").value);
+
+  const t = minutes * 60 + seconds;
+  const VAM = 3600 * dh / t;
+
+  document.getElementById("result").innerHTML =
+    "<strong>VAM:</strong> " + VAM.toFixed(1) + " m/h";
+}
+</script>
+
+</body>
+</html>

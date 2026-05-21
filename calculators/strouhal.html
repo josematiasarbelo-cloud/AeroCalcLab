@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Strouhal Number Calculator</title>
+  <link rel="stylesheet" href="../style.css">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      chtml: {
+        displayAlign: "left",
+        displayIndent: "0em"
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+  <h1>Strouhal Number Calculator</h1>
+
+  <p class="module-description">
+    Calculate the Strouhal number, a non-dimensional parameter describing
+    oscillating or vortex-shedding flows. It relates characteristic frequency,
+    length scale, and flow velocity.
+  </p>
+
+  <p><a href="../modules/similarity-parameters.html">← Back to Similarity Parameters</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+St = \frac{fL}{U}
+\]
+
+<hr>
+
+<label>Frequency \(f\) (Hz):</label>
+<input id="f" type="number" step="any">
+
+<label>Characteristic length \(L\) (m):</label>
+<input id="L" type="number" step="any">
+
+<label>Velocity \(U\) (m/s):</label>
+<input id="U" type="number" step="any">
+
+<button onclick="calculateStrouhal()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calculateStrouhal() {
+  const f = parseFloat(document.getElementById("f").value);
+  const L = parseFloat(document.getElementById("L").value);
+  const U = parseFloat(document.getElementById("U").value);
+
+  const St = (f * L) / U;
+
+  document.getElementById("result").innerHTML =
+    "<strong>St = </strong>" + St.toFixed(4);
+}
+</script>
+
+</body>
+</html>

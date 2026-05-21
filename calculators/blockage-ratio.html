@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Blockage Ratio Calculator</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>Blockage Ratio Calculator</h1>
+<p class="module-description">
+  Blockage ratio measures how much of the wind tunnel test section is occupied
+  by the model. Large blockage ratios usually require correction because the
+  tunnel accelerates the flow around the model.
+</p>
+<p><a href="../modules/wind-tunnel-correction.html">← Back to Wind Tunnel Correction</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+BR = \frac{A_m}{A_t}
+\]
+
+\[
+BR_{\%} = 100 \frac{A_m}{A_t}
+\]
+
+<hr>
+
+<label>Model frontal area \(A_m\) (m²):</label>
+<input id="Am" type="number" step="any">
+
+<label>Test-section area \(A_t\) (m²):</label>
+<input id="At" type="number" step="any">
+
+<button onclick="calc()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const Am = parseFloat(document.getElementById("Am").value);
+  const At = parseFloat(document.getElementById("At").value);
+
+  const BR = Am / At;
+
+  document.getElementById("result").innerHTML =
+    "<strong>Blockage ratio = </strong>" + BR.toFixed(4) +
+    "<br><strong>Blockage = </strong>" + (100 * BR).toFixed(2) + " %";
+}
+</script>
+
+</body>
+</html>

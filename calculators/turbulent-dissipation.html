@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Turbulent Dissipation Rate</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+chtml: {
+displayAlign: "left",
+displayIndent: "0em"
+}
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Turbulent Dissipation Rate</h1>
+
+<p class="module-description">
+Calculate turbulent dissipation rate using the equilibrium
+atmospheric boundary-layer formulation of Richards and Hoxey (1993).
+</p>
+
+<p><a href="../modules/engineering.html">← Back to Engineering Tools</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+\varepsilon =
+\frac{
+u_*^3
+}{
+\kappa z
+}
+\]
+
+<hr>
+
+<label>Friction velocity \(u_*\) (m/s):</label>
+<input id="ustar" type="number" step="any">
+
+<label>Height \(z\) (m):</label>
+<input id="z" type="number" step="any">
+
+<label>von Kármán constant \(\kappa\):</label>
+<input id="kappa" type="number" step="any" value="0.41">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Result</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function calculate() {
+
+const ustar =
+parseFloat(document.getElementById("ustar").value);
+
+const z =
+parseFloat(document.getElementById("z").value);
+
+const kappa =
+parseFloat(document.getElementById("kappa").value);
+
+const epsilon =
+Math.pow(ustar,3)/(kappa*z);
+
+document.getElementById("results").innerHTML =
+
+"<strong>Dissipation rate ε:</strong> " +
+epsilon.toFixed(6) + " m²/s³";
+
+}
+
+</script>
+
+</body>
+</html>

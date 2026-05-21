@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reynolds Number</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header><h1>Prandtl Number</h1></header>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+Pr = \frac{c_p \mu}{k}
+\]
+
+<hr>
+
+<label>Specific heat c_p:</label>
+<input id="cp" value="1005">
+
+<label>Viscosity μ:</label>
+<input id="mu" value="1.8e-5">
+
+<label>Thermal conductivity k:</label>
+<input id="k" value="0.026">
+
+<button onclick="calc()">Calculate</button>
+
+<p id="out"></p>
+
+</section>
+
+<script>
+function calc() {
+  const cp = parseFloat(document.getElementById("cp").value);
+  const mu = parseFloat(document.getElementById("mu").value);
+  const k = parseFloat(document.getElementById("k").value);
+
+  const Pr = (cp * mu) / k;
+
+  document.getElementById("out").innerText = "Pr = " + Pr.toFixed(3);
+}
+</script>
+
+</body>
+</html>

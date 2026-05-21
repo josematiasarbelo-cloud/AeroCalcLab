@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CFL Number</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+chtml: {
+displayAlign: "left",
+displayIndent: "0em"
+}
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>CFL Number Calculator</h1>
+
+<p class="module-description">
+Calculate the Courant–Friedrichs–Lewy (CFL) number used in
+CFD stability analysis and time step selection.
+<br><br>
+The time step is generally selected such that the CFL number
+remains below 1 in the LES region of the computational domain.
+In practice, it is often recommended to target a CFL number
+of approximately 0.5 in order to account for differences
+between instantaneous and time-averaged velocities
+</p>
+
+<p><a href="../modules/engineering.html">← Back to Engineering Tools</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+CFL =
+\frac{
+U \Delta t
+}{
+\Delta x
+}
+\]
+
+<hr>
+
+<label>Velocity \(U\) (m/s):</label>
+<input id="U" type="number" step="any">
+
+<label>Timestep \(\Delta t\) (s):</label>
+<input id="dt" type="number" step="any">
+
+<label>Cell size \(\Delta x\) (m):</label>
+<input id="dx" type="number" step="any">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Result</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function calculate() {
+
+const U =
+parseFloat(document.getElementById("U").value);
+
+const dt =
+parseFloat(document.getElementById("dt").value);
+
+const dx =
+parseFloat(document.getElementById("dx").value);
+
+const CFL =
+(U*dt)/dx;
+
+document.getElementById("results").innerHTML =
+
+"<strong>CFL number:</strong> " +
+CFL.toFixed(5);
+
+}
+
+</script>
+
+</body>
+</html>

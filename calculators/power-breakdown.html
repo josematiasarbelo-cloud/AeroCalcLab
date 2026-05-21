@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Power Breakdown Calculator</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: {
+    displayAlign: "left",
+    displayIndent: "0em"
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+  canvas {
+    width: 100%;
+    max-width: 800px;
+    height: 480px;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+    background: white;
+  }
+
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .results-table th,
+  .results-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: right;
+  }
+
+  .results-table th:first-child,
+  .results-table td:first-child {
+    text-align: left;
+  }
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <h1>Power Breakdown Calculator</h1>
+
+  <p class="module-description">
+    Estimate the percentage contribution of aerodynamic drag, wheel rotational
+    losses, rolling resistance, wheel bearing losses, and climbing power across
+    cycling speed. The power model was introduced by Martin et al. (1998).
+  </p>
+
+  <p><a href="../modules/cycling-specific.html">← Back to Cycling Specific</a></p>
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formulas</h3>
+
+\[
+P_{AD} = \frac{1}{2}\rho C_dA U^3
+\]
+
+\[
+P_{WR} = \frac{1}{2}\rho F_w U^3
+\]
+
+\[
+P_{RR} = U C_{rr}mg
+\]
+
+\[
+P_{WB} = U(91 + 8.7U)\times 10^{-3}
+\]
+
+\[
+P_{GR} = mgGU
+\]
+
+\[
+P_{tot} =
+P_{AD} + P_{WR} + P_{RR} + P_{WB} + P_{GR}
+\]
+
+\[
+\text{Power share} =
+100\frac{P_i}{P_{tot}}
+\]
+
+<hr>
+
+<h3>Inputs</h3>
+
+<label>Air density \(\rho\) (kg/m³):</label>
+<input id="rho" type="number" step="any" value="1.225">
+
+<label>CdA (m²):</label>
+<input id="CdA" type="number" step="any" value="0.21">
+
+<label>Wheel rotational drag factor \(F_w\) (m²):</label>
+<input id="Fw" type="number" step="any" value="0.0044">
+
+<label>Rolling resistance coefficient \(C_{rr}\):</label>
+<input id="Crr" type="number" step="any" value="0.0032">
+
+<label>Mass \(m\) (kg):</label>
+<input id="m" type="number" step="any" value="80">
+
+<label>Gravity \(g\) (m/s²):</label>
+<input id="g" type="number" step="any" value="9.81">
+
+<label>Grade \(G\) (-), e.g. 0.05 for 5%:</label>
+<input id="grade" type="number" step="any" value="0.00">
+
+<label>Selected speed \(U\) (m/s):</label>
+<input id="speed" type="number" step="any" value="10">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Results at Selected Speed</h3>
+<p id="summary"></p>
+
+<table class="results-table">
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Power (W)</th>
+      <th>Share (%)</th>
+    </tr>
+  </thead>
+  <tbody id="resultsTable"></tbody>
+</table>
+
+<h3>Power Share Plot</h3>
+<canvas id="plot" width="800" height="480"></canvas>
+
+</section>
+
+</main>
+
+<script>
+function getInputs() {
+  return {
+    rho: parseFloat(document.getElementById("rho").value),
+    CdA: parseFloat(document.getElementById("CdA").value),
+    Fw: parseFloat(document.getElementById("Fw").value),
+    Crr: parseFloat(document.getElementById("Crr").value),
+    m: parseFloat(document.getElementById("m").value),
+    g: parseFloat(document.getElementById("g").value),
+    grade: parseFloat(document.getElementById("grade").value),
+    speed: parseFloat(document.getElementById("speed").value)
+  };
+}
+
+function powerComponents(U, p) {
+  const P_AD = 0.5 * p.rho * p.CdA * Math.pow(U, 3);
+  const P_WR = 0.5 * p.rho * p.Fw * Math.pow(U, 3);
+  const P_RR = U * p.Crr * p.m * p.g;
+  const P_WB = U * (91 + 8.7 * U) * 1e-3;
+  const P_GR = p.m * p.g * p.grade * U;
+
+  const P_tot = P_AD + P_WR + P_RR + P_WB + P_GR;
+
+  return {
+    P_AD,
+    P_WR,
+    P_RR,
+    P_WB,
+    P_GR,
+    P_tot
+  };
+}
+
+function calculate() {
+  const p = getInputs();
+  const U = p.speed;
+
+  const P = powerComponents(U, p);
+
+  const components = [
+    ["Aerodynamic drag", P.P_AD],
+    ["Wheel rotational drag", P.P_WR],
+    ["Rolling resistance", P.P_RR],
+    ["Wheel bearing losses", P.P_WB],
+    ["Gradient / climbing", P.P_GR]
+  ];
+
+  document.getElementById("summary").innerHTML =
+    "<strong>Total power:</strong> " + P.P_tot.toFixed(2) + " W";
+
+  let html = "";
+
+  components.forEach(row => {
+    const share = 100 * row[1] / P.P_tot;
+
+    html += `
+      <tr>
+        <td>${row[0]}</td>
+        <td>${row[1].toFixed(2)}</td>
+        <td>${share.toFixed(2)}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("resultsTable").innerHTML = html;
+
+  drawPlot(p);
+}
+
+function drawPlot(p) {
+  const canvas = document.getElementById("plot");
+  const ctx = canvas.getContext("2d");
+
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const margin = {
+    left: 70,
+    right: 30,
+    top: 40,
+    bottom: 60
+  };
+
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+
+  const xmin = 0;
+  const xmax = 25;
+  const ymin = 0;
+  const ymax = 100;
+
+  function xScale(x) {
+    return margin.left + (x - xmin) / (xmax - xmin) * plotW;
+  }
+
+  function yScale(y) {
+    return margin.top + plotH - (y - ymin) / (ymax - ymin) * plotH;
+  }
+
+  const colors = {
+    AD: "#0072B2",
+    WR: "#E69F00",
+    RR: "#009E73",
+    WB: "#D55E00",
+    GR: "#CC79A7"
+  };
+
+  const labels = {
+    AD: "P_AD",
+    WR: "P_WR",
+    RR: "P_RR",
+    WB: "P_WB",
+    GR: "P_GR"
+  };
+
+  const data = {
+    AD: [],
+    WR: [],
+    RR: [],
+    WB: [],
+    GR: []
+  };
+
+  for (let i = 0; i <= 250; i++) {
+    const U = 0.001 + i * (25 - 0.001) / 250;
+    const P = powerComponents(U, p);
+
+    data.AD.push([U, 100 * P.P_AD / P.P_tot]);
+    data.WR.push([U, 100 * P.P_WR / P.P_tot]);
+    data.RR.push([U, 100 * P.P_RR / P.P_tot]);
+    data.WB.push([U, 100 * P.P_WB / P.P_tot]);
+    data.GR.push([U, 100 * P.P_GR / P.P_tot]);
+  }
+
+  // Grid
+  ctx.strokeStyle = "#ddd";
+  ctx.lineWidth = 1;
+
+  for (let x = 0; x <= 25; x += 5) {
+    ctx.beginPath();
+    ctx.moveTo(xScale(x), yScale(0));
+    ctx.lineTo(xScale(x), yScale(100));
+    ctx.stroke();
+  }
+
+  for (let y = 0; y <= 100; y += 20) {
+    ctx.beginPath();
+    ctx.moveTo(xScale(0), yScale(y));
+    ctx.lineTo(xScale(25), yScale(y));
+    ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 2;
+
+  ctx.beginPath();
+  ctx.moveTo(xScale(0), yScale(0));
+  ctx.lineTo(xScale(25), yScale(0));
+  ctx.lineTo(xScale(25), yScale(100));
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(xScale(0), yScale(0));
+  ctx.lineTo(xScale(0), yScale(100));
+  ctx.stroke();
+
+  // Ticks and labels
+  ctx.fillStyle = "#000";
+  ctx.font = "16px Arial";
+  ctx.textAlign = "center";
+
+  for (let x = 0; x <= 25; x += 5) {
+    ctx.fillText(x.toString(), xScale(x), yScale(0) + 28);
+  }
+
+  ctx.textAlign = "right";
+  for (let y = 0; y <= 100; y += 20) {
+    ctx.fillText(y.toString(), xScale(0) - 12, yScale(y) + 5);
+  }
+
+  ctx.textAlign = "center";
+  ctx.fillText("U (m/s)", margin.left + plotW / 2, H - 15);
+
+  ctx.save();
+  ctx.translate(20, margin.top + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText("Power share (%)", 0, 0);
+  ctx.restore();
+
+  // Plot lines
+  Object.keys(data).forEach(key => {
+    ctx.strokeStyle = colors[key];
+    ctx.lineWidth = 2.5;
+
+    ctx.beginPath();
+
+    data[key].forEach((point, i) => {
+      const x = xScale(point[0]);
+      const y = yScale(point[1]);
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+
+    ctx.stroke();
+
+    // markers every 5 m/s
+    for (let U = 0; U <= 25; U += 5) {
+      const P = powerComponents(Math.max(U, 0.001), p);
+      let share;
+
+      if (key === "AD") share = 100 * P.P_AD / P.P_tot;
+      if (key === "WR") share = 100 * P.P_WR / P.P_tot;
+      if (key === "RR") share = 100 * P.P_RR / P.P_tot;
+      if (key === "WB") share = 100 * P.P_WB / P.P_tot;
+      if (key === "GR") share = 100 * P.P_GR / P.P_tot;
+
+      ctx.beginPath();
+      ctx.arc(xScale(U), yScale(share), 4, 0, 2 * Math.PI);
+      ctx.fillStyle = colors[key];
+      ctx.fill();
+    }
+  });
+
+  // Legend
+  let legendX = margin.left + 20;
+  const legendY = 20;
+
+  Object.keys(labels).forEach(key => {
+    ctx.fillStyle = colors[key];
+    ctx.fillRect(legendX, legendY - 10, 18, 4);
+
+    ctx.fillStyle = "#000";
+    ctx.font = "14px Arial";
+    ctx.textAlign = "left";
+    ctx.fillText(labels[key], legendX + 25, legendY - 5);
+
+    legendX += 110;
+  });
+}
+
+calculate();
+</script>
+
+</body>
+</html>

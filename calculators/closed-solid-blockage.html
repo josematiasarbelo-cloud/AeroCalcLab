@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Closed-Section Solid Blockage</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>Closed-Section Solid Blockage</h1>
+<p class="module-description">
+  Closed-section solid blockage correction accounts for the acceleration of
+  the flow caused by the physical displacement of air by the model inside a
+  confined test section. This implementation uses a configurable
+  Barlow/Rae/Pope-style solid-blockage factor.
+</p>
+<p><a href="../modules/wind-tunnel-correction.html">← Back to Wind Tunnel Correction</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Formulas</h3>
+
+\[
+\varepsilon_s = K_s \tau \frac{V_m}{C^{3/2}}
+\]
+
+\[
+U_c = U_m (1 + \varepsilon_s)
+\]
+
+\[
+q_c = q_m (1 + \varepsilon_s)^2
+\]
+
+\[
+D_c = D_m (1 + \varepsilon_s)^2
+\]
+
+<hr>
+
+<label>Model volume \(V_m\) (m³):</label>
+<input id="Vm" type="number" step="any">
+
+<label>Test-section area \(C\) (m²):</label>
+<input id="C" type="number" step="any">
+
+<label>Shape factor \(K_s\):</label>
+<input id="Ks" type="number" step="any" value="1.0">
+
+<label>Thickness/body factor \(\tau\):</label>
+<input id="tau" type="number" step="any" value="1.0">
+
+<label>Measured value:</label>
+<input id="value" type="number" step="any">
+
+<label>Apply correction to:</label>
+<select id="target">
+  <option value="velocity">Velocity</option>
+  <option value="pressure">Dynamic pressure</option>
+  <option value="drag">Drag</option>
+</select>
+
+<button onclick="calc()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const Vm = parseFloat(document.getElementById("Vm").value);
+  const C = parseFloat(document.getElementById("C").value);
+  const Ks = parseFloat(document.getElementById("Ks").value);
+  const tau = parseFloat(document.getElementById("tau").value);
+  const value = parseFloat(document.getElementById("value").value);
+  const target = document.getElementById("target").value;
+
+  const eps = Ks * tau * Vm / Math.pow(C, 1.5);
+
+  let corrected;
+  if (target === "velocity") corrected = value * (1 + eps);
+  if (target === "pressure") corrected = value * Math.pow(1 + eps, 2);
+  if (target === "drag") corrected = value * Math.pow(1 + eps, 2);
+
+  document.getElementById("result").innerHTML =
+    "<strong>ε<sub>s</sub> = </strong>" + eps.toFixed(5) +
+    "<br><strong>Corrected value = </strong>" + corrected.toFixed(5);
+}
+</script>
+
+</body>
+</html>

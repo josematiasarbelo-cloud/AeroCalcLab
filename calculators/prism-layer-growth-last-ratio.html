@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prism Layer Growth - Last Ratio Approach</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: {
+    displayAlign: "left",
+    displayIndent: "0em"
+  }
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Prism Layer Growth — Last Ratio Approach</h1>
+
+<p class="module-description">
+  Estimate the minimum number of prism layers required to satisfy
+  a prescribed prism-layer growth rate using a last-ratio approach.
+  This method enssures a smooth transition between the prism cells in the final near-wall grid layer and the polyhedral/tetrahedral/hexahedral cells in the enar volume grid.
+</p>
+
+<p><a href="../modules/engineering.html">← Back to Engineering Tools</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Theory</h3>
+
+<p>
+The last-ratio is defined as the ratio between the height of the cells in the last prism layer and the size of the local surface cell. Therefore the final prism-layer height is estimated as a fraction of the
+maximum or average surface cells size:
+</p>
+
+\[
+h_n = \Delta x \cdot lr
+\]
+
+<p>
+where:
+</p>
+
+<ul>
+  <li>\(h_n\): final prism-layer height</li>
+  <li>\(\Delta x\): average or maximum surface cell size</li>
+  <li>\(lr\): last ratio (transition ratio)</li>
+</ul>
+
+<p>
+The minimum number of prism layers is then:
+</p>
+
+\[
+n = 1 +
+\frac{
+\ln\left(\dfrac{h_n}{h_1}\right)
+}{
+\ln(gr)
+}
+\]
+
+<p>
+where:
+</p>
+
+<ul>
+  <li>\(h_1\): first prism-layer height</li>
+  <li>\(gr\): prism-layer growth rate</li>
+</ul>
+
+<hr>
+
+<hr>
+
+<h3>Unit Conversion</h3>
+
+<p>
+Convert millimeter inputs to meters for CFD and SI-unit consistency.
+</p>
+
+<label>Input value (mm):</label>
+<input id="mmInput" type="number" step="any">
+
+<button onclick="convertMMtoM()">Convert</button>
+
+<p id="conversionResult"></p>
+
+<hr>
+
+<h3>Inputs</h3>
+
+<label>Growth rate \(gr\):</label>
+<input id="gr" type="number" step="any" value="1.14">
+
+<label>Last ratio \(lr\):</label>
+<input id="lr" type="number" step="any" value="0.30">
+
+<label>Surface/volume cell resolution \(\Delta x\) (m):</label>
+<input id="dx" type="number" step="any" value="0.003">
+
+<label>First layer height \(h_1\) (m):</label>
+<input id="h1" type="number" step="any" value="0.00002">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Results</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function convertMMtoM() {
+
+  const mm = parseFloat(document.getElementById("mmInput").value);
+
+  const meters = mm / 1000.0;
+
+  document.getElementById("conversionResult").innerHTML =
+    "<strong>" + mm + " mm = </strong>" +
+    meters.toFixed(5) + " m";
+}
+
+function calculate() {
+
+  const gr = parseFloat(document.getElementById("gr").value);
+  const lr = parseFloat(document.getElementById("lr").value);
+
+  const dx_mm = parseFloat(document.getElementById("dx").value);
+  const h1_mm = parseFloat(document.getElementById("h1").value);
+
+  // convert to meters internally
+  const dx = dx_mm / 1000.0;
+  const h1 = h1_mm / 1000.0;
+
+  // last layer height
+  const hn = dx * lr;
+
+  // minimum number of layers
+  const n = 1 + (Math.log(hn / h1) / Math.log(gr));
+
+  document.getElementById("results").innerHTML =
+    "<strong>Last layer height h<sub>n</sub>:</strong> " +
+    (hn * 1000).toFixed(5) + " mm<br><br>" +
+
+    "<strong>Minimum number of prism layers:</strong> " +
+    Math.ceil(n) + "<br><br>" +
+
+    "<strong>Exact layer count:</strong> " +
+    n.toFixed(2);
+}
+
+</script>
+
+</body>
+</html>

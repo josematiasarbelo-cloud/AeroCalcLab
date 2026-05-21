@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reynolds Number</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header><h1>Froude Number</h1></header>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+Fr = \frac{U}{\sqrt{gL}}
+\]
+
+<hr>
+
+<label>Velocity U:</label>
+<input id="U">
+
+<label>Length L:</label>
+<input id="L">
+
+<button onclick="calc()">Calculate</button>
+
+<p id="out"></p>
+
+</section>
+
+<script>
+function calc() {
+  const U = parseFloat(document.getElementById("U").value);
+  const L = parseFloat(document.getElementById("L").value);
+
+  const g = 9.80665;
+
+  const Fr = U / Math.sqrt(g * L);
+
+  document.getElementById("out").innerText = "Fr = " + Fr.toFixed(3);
+}
+</script>
+
+</body>
+</html>

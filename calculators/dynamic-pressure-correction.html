@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dynamic Pressure Correction</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>Dynamic Pressure Correction</h1>
+<p class="module-description">
+  Apply a known blockage or interference correction factor to velocity,
+  dynamic pressure, or drag. This is useful when a correction factor has
+  already been estimated from another blockage method.
+</p>
+<p><a href="../modules/wind-tunnel-correction.html">← Back to Wind Tunnel Correction</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Formulas</h3>
+
+\[
+U_c = U_m(1+\varepsilon)
+\]
+
+\[
+q_c = q_m(1+\varepsilon)^2
+\]
+
+\[
+D_c = D_m(1+\varepsilon)^2
+\]
+
+<hr>
+
+<label>Correction factor \(\varepsilon\):</label>
+<input id="eps" type="number" step="any">
+
+<label>Measured value:</label>
+<input id="value" type="number" step="any">
+
+<label>Apply to:</label>
+<select id="target">
+  <option value="velocity">Velocity</option>
+  <option value="pressure">Dynamic pressure</option>
+  <option value="drag">Drag</option>
+</select>
+
+<button onclick="calc()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const eps = parseFloat(document.getElementById("eps").value);
+  const value = parseFloat(document.getElementById("value").value);
+  const target = document.getElementById("target").value;
+
+  let corrected;
+
+  if (target === "velocity") corrected = value * (1 + eps);
+  if (target === "pressure") corrected = value * Math.pow(1 + eps, 2);
+  if (target === "drag") corrected = value * Math.pow(1 + eps, 2);
+
+  document.getElementById("result").innerHTML =
+    "<strong>Corrected value = </strong>" + corrected.toFixed(5);
+}
+</script>
+
+</body>
+</html>

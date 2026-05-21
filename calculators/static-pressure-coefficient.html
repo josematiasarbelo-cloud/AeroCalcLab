@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Static Pressure Coefficient Calculator</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: {
+    displayAlign: "left",
+    displayIndent: "0em"
+  }
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Static Pressure Coefficient Calculator</h1>
+
+<p class="module-description">
+Calculate the static pressure coefficient, a non-dimensional
+pressure quantity commonly used in aerodynamics and CFD to
+compare local pressure relative to freestream conditions.
+</p>
+
+<p><a href="../modules/core-aerodynamics.html">← Back to Core Aerodynamics</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+C_p =
+\frac{
+p - p_\infty
+}{
+\frac{1}{2}
+\rho U_\infty^2
+}
+\]
+
+<hr>
+
+<h3>Inputs</h3>
+
+<label>Local static pressure \(p\) (Pa):</label>
+<input id="p" type="number" step="any">
+
+<label>Freestream static pressure \(p_\infty\) (Pa):</label>
+<input id="pinf" type="number" step="any">
+
+<label>Density \(\rho\) (kg/m³):</label>
+<input id="rho" type="number" step="any" value="1.225">
+
+<label>Freestream velocity \(U_\infty\) (m/s):</label>
+<input id="U" type="number" step="any">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Results</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function calculate() {
+
+  const p =
+    parseFloat(document.getElementById("p").value);
+
+  const pinf =
+    parseFloat(document.getElementById("pinf").value);
+
+  const rho =
+    parseFloat(document.getElementById("rho").value);
+
+  const U =
+    parseFloat(document.getElementById("U").value);
+
+  const q =
+    0.5 * rho * U * U;
+
+  const Cp =
+    (p - pinf) / q;
+
+  document.getElementById("results").innerHTML =
+
+    "<strong>Pressure coefficient C<sub>p</sub>:</strong> " +
+    Cp.toFixed(5);
+
+}
+
+</script>
+
+</body>
+</html>

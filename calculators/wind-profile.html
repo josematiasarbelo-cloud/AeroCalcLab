@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wind Profile Calculator</title>
+  <link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+    chtml: {
+      displayAlign: "left",
+      displayIndent: "0em"
+    }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<header>
+  <h1>Wind Profile Calculator</h1>
+</header>
+
+<main>
+
+<section class="card">
+
+<label>Model:</label>
+<select id="model">
+  <option value="power">Power Law</option>
+  <option value="log">Log Law</option>
+</select>
+
+<h3>Formulas</h3>
+
+<p><b>Power Law:</b></p>
+<p>\[
+U(z) = U_{\mathrm{ref}} \left(\frac{z}{z_{\mathrm{ref}}}\right)^{\alpha}
+\]</p>
+
+<p><b>Log Law:</b></p>
+<p>\[
+U(z) = \frac{u_*}{\kappa} \ln\left(\frac{z}{z_0}\right)
+\]</p>
+
+<hr>
+
+<hr>
+
+<div id="powerInputs">
+  <label>U_ref (m/s):</label>
+  <input id="Uref" type="number">
+
+  <label>z_ref (m):</label>
+  <input id="zref" type="number">
+
+  <label>alpha:</label>
+  <input id="alpha" type="number" step="0.01">
+</div>
+
+<div id="logInputs" style="display:none;">
+  <label>u* (friction velocity):</label>
+  <input id="ustar" type="number">
+
+  <label>z0 (roughness length, m):</label>
+  <input id="z0" type="number">
+
+  <label>kappa:</label>
+  <input id="kappa" type="number" value="0.41">
+</div>
+
+<label>Height z (m):</label>
+<input id="z" type="number">
+
+<button onclick="calc()">Calculate</button>
+
+<h3>Result:</h3>
+<p id="out"></p>
+
+</section>
+
+</main>
+
+<script>
+document.getElementById("model").addEventListener("change", function () {
+  document.getElementById("powerInputs").style.display = this.value === "power" ? "block" : "none";
+  document.getElementById("logInputs").style.display = this.value === "log" ? "block" : "none";
+});
+
+function calc() {
+  const model = document.getElementById("model").value;
+  const z = parseFloat(document.getElementById("z").value);
+
+  let U;
+
+  if (model === "power") {
+    const Uref = parseFloat(document.getElementById("Uref").value);
+    const zref = parseFloat(document.getElementById("zref").value);
+    const alpha = parseFloat(document.getElementById("alpha").value);
+
+    U = Uref * Math.pow(z / zref, alpha);
+  }
+
+  if (model === "log") {
+    const ustar = parseFloat(document.getElementById("ustar").value);
+    const z0 = parseFloat(document.getElementById("z0").value);
+    const kappa = parseFloat(document.getElementById("kappa").value);
+
+    U = (ustar / kappa) * Math.log(z / z0);
+  }
+
+  document.getElementById("out").innerText = "Velocity: " + U.toFixed(3) + " m/s";
+}
+</script>
+
+</body>
+</html>

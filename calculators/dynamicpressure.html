@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Pressure Calculator</title>
+  <link rel="stylesheet" href="../style.css">
+  <script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+    chtml: {
+      displayAlign: "left",
+      displayIndent: "0em"
+    }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="calculator">
+  <h1>Dynamic Pressure Calculator</h1>
+  
+<input id="rho" type="number" placeholder="Density (kg/m³)">
+<input id="velocity" type="number" placeholder="Velocity (m/s)">
+
+  <button onclick="calcQ()">Calculate</button>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+
+function calcQ() {
+  const rho = parseFloat(document.getElementById('rho').value);
+  const v = parseFloat(document.getElementById('velocity').value);
+  const q = 0.5 * rho * v * v;
+  document.getElementById('result').innerText = 'Dynamic pressure: ' + q.toFixed(2) + ' Pa';
+}
+
+</script>
+</body>
+</html>

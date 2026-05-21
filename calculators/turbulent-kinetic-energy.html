@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Turbulent Kinetic Energy</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+chtml: {
+displayAlign: "left",
+displayIndent: "0em"
+}
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+
+<h1>Turbulent Kinetic Energy</h1>
+
+<p class="module-description">
+Calculate resolved turbulent kinetic energy from fluctuating
+velocity components.
+</p>
+
+<p><a href="../modules/engineering.html">← Back to Engineering Tools</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+k_{res}
+=
+\frac{1}{2}
+\left(
+\overline{u_x'^2}
++
+\overline{u_y'^2}
++
+\overline{u_z'^2}
+\right)
+\]
+
+<hr>
+
+<label>\(u'_x\) RMS (m/s):</label>
+<input id="ux" type="number" step="any">
+
+<label>\(u'_y\) RMS (m/s):</label>
+<input id="uy" type="number" step="any">
+
+<label>\(u'_z\) RMS (m/s):</label>
+<input id="uz" type="number" step="any">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Result</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function calculate() {
+
+const ux =
+parseFloat(document.getElementById("ux").value);
+
+const uy =
+parseFloat(document.getElementById("uy").value);
+
+const uz =
+parseFloat(document.getElementById("uz").value);
+
+const k =
+0.5*(ux*ux + uy*uy + uz*uz);
+
+document.getElementById("results").innerHTML =
+
+"<strong>Resolved turbulent kinetic energy:</strong> " +
+k.toFixed(5) + " m²/s²";
+
+}
+
+</script>
+
+</body>
+</html>

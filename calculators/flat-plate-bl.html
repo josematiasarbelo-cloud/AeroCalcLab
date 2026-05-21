@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flat Plate Boundary Layer</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header><h1>Flat Plate Boundary Layer</h1></header>
+
+<main>
+<section class="card">
+
+<h3>Formulas</h3>
+
+\[
+Re_x = \frac{Ux}{\nu}
+\]
+
+\[
+C_f = \frac{0.664}{\sqrt{Re_x}}, \quad
+\delta = \frac{5x}{\sqrt{Re_x}}
+\]
+
+\[
+C_f = \frac{0.0592}{Re_x^{1/5}}, \quad
+\delta = \frac{0.16x}{Re_x^{1/7}}
+\]
+
+\[
+C_f = \frac{0.074}{Re_x^{1/5}}, \quad
+\delta = \frac{0.37x}{Re_x^{1/5}}
+\]
+
+<hr>
+
+<label>Flow type:</label>
+<select id="type">
+  <option value="laminar">Laminar</option>
+  <option value="turb71">Turbulent 1/7</option>
+  <option value="turb51">Turbulent 1/5</option>
+</select>
+
+<label>U:</label>
+<input id="U">
+
+<label>x:</label>
+<input id="x">
+
+<label>ν:</label>
+<input id="nu" value="1.5e-5">
+
+<button onclick="calc()">Calculate</button>
+
+<p id="out"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const type = document.getElementById("type").value;
+  const U = parseFloat(document.getElementById("U").value);
+  const x = parseFloat(document.getElementById("x").value);
+  const nu = parseFloat(document.getElementById("nu").value);
+
+  const Rex = (U * x) / nu;
+
+  let Cf, delta;
+
+  if (type === "laminar") {
+    Cf = 0.664 / Math.sqrt(Rex);
+    delta = 5 * x / Math.sqrt(Rex);
+  } else if (type === "turb71") {
+    Cf = 0.0592 / Math.pow(Rex, 1/5);
+    delta = 0.16 * x / Math.pow(Rex, 1/7);
+  } else {
+    Cf = 0.074 / Math.pow(Rex, 1/5);
+    delta = 0.37 * x / Math.pow(Rex, 1/5);
+  }
+
+  document.getElementById("out").innerText =
+    "Re_x = " + Rex.toExponential(3) +
+    " | Cf = " + Cf.toExponential(3) +
+    " | δ = " + delta.toFixed(4);
+}
+</script>
+
+</body>
+</html>

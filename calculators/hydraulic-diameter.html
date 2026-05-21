@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hydraulic Diameter Calculator</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: {
+    displayAlign: "left",
+    displayIndent: "0em"
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>Hydraulic Diameter Calculator</h1>
+
+<p class="module-description">
+  Calculate the hydraulic diameter of a non-circular duct or flow passage.
+  Hydraulic diameter is commonly used in Reynolds number, pressure loss,
+  and internal flow calculations when the cross-section is not circular.
+</p>
+
+<p><a href="../modules/engineering.html">← Back to Engineering Tools</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+D_h = \frac{4A}{P}
+\]
+
+<p>
+where \(A\) is the cross-sectional flow area and \(P\) is the wetted perimeter.
+</p>
+
+<hr>
+
+<label>Cross-sectional area \(A\) (m²):</label>
+<input id="A" type="number" step="any">
+
+<label>Wetted perimeter \(P\) (m):</label>
+<input id="P" type="number" step="any">
+
+<button onclick="calculateHydraulicDiameter()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calculateHydraulicDiameter() {
+  const A = parseFloat(document.getElementById("A").value);
+  const P = parseFloat(document.getElementById("P").value);
+
+  const Dh = (4 * A) / P;
+
+  document.getElementById("result").innerHTML =
+    "<strong>D<sub>h</sub> = </strong>" + Dh.toFixed(5) + " m";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Boundary Layer Height</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+chtml: {
+displayAlign: "left",
+displayIndent: "0em"
+}
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Boundary Layer Height</h1>
+
+<p class="module-description">
+Estimate boundary-layer thickness using laminar Blasius,
+turbulent 1/7th-power-law, or turbulent 1/5th-power-law
+approximations.
+</p>
+
+<p><a href="../modules/engineering.html">← Back to Engineering Tools</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formulas</h3>
+
+<p><strong>Blasius laminar</strong></p>
+
+\[
+\delta =
+\frac{
+5x
+}{
+\sqrt{Re_x}
+}
+\]
+
+<p><strong>Turbulent 1/7th law</strong></p>
+
+\[
+\delta =
+0.16xRe_x^{-1/7}
+\]
+
+<p><strong>Turbulent 1/5th law</strong></p>
+
+\[
+\delta =
+0.37xRe_x^{-1/5}
+\]
+
+<hr>
+
+<label>Method:</label>
+
+<select id="method">
+<option value="blasius">Blasius laminar</option>
+<option value="17th">Turbulent 1/7th law</option>
+<option value="15th">Turbulent 1/5th law</option>
+</select>
+
+<label>Streamwise position \(x\) (m):</label>
+<input id="x" type="number" step="any">
+
+<label>Reynolds number \(Re_x\):</label>
+<input id="Re" type="number" step="any">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Result</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function calculate() {
+
+const method =
+document.getElementById("method").value;
+
+const x =
+parseFloat(document.getElementById("x").value);
+
+const Re =
+parseFloat(document.getElementById("Re").value);
+
+let delta;
+
+if (method === "blasius") {
+
+delta = 5*x/Math.sqrt(Re);
+
+}
+
+if (method === "17th") {
+
+delta = 0.16*x*Math.pow(Re,-1/7);
+
+}
+
+if (method === "15th") {
+
+delta = 0.37*x*Math.pow(Re,-1/5);
+
+}
+
+document.getElementById("results").innerHTML =
+
+"<strong>Boundary-layer thickness:</strong> " +
+delta.toFixed(5) + " m";
+
+}
+
+</script>
+
+</body>
+</html>

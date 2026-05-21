@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Y+ Calculator</title>
+  <link rel="stylesheet" href="../style.css">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      chtml: { displayAlign: "left", displayIndent: "0em" }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header><h1>Yaw Angle</h1></header>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+\beta = \tan^{-1}\left(\frac{V_{\perp}}{V_{\parallel}}\right)
+\]
+
+<hr>
+
+<label>Crosswind velocity V⊥:</label>
+<input id="Vx">
+
+<label>Headwind velocity V∥:</label>
+<input id="Vy">
+
+<button onclick="calc()">Calculate</button>
+
+<p id="out"></p>
+
+</section>
+
+<script>
+function calc() {
+  const Vx = parseFloat(document.getElementById("Vx").value);
+  const Vy = parseFloat(document.getElementById("Vy").value);
+
+  const beta = Math.atan(Vx / Vy) * 180 / Math.PI;
+
+  document.getElementById("out").innerText = "Yaw angle β = " + beta.toFixed(2) + "°";
+}
+</script>
+
+</body>
+</html>

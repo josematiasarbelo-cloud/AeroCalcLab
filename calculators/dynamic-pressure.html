@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dynamic Pressure Calculator</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: {
+    displayAlign: "left",
+    displayIndent: "0em"
+  }
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Dynamic Pressure Calculator</h1>
+
+<p class="module-description">
+Calculate the dynamic pressure associated with fluid motion.
+Dynamic pressure represents the kinetic-energy contribution
+to the total pressure and is widely used in aerodynamics,
+CFD, and wind tunnel testing.
+</p>
+
+<p><a href="../modules/core-aerodynamics.html">← Back to Core Aerodynamics</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+q =
+\frac{1}{2}
+\rho U^2
+\]
+
+<hr>
+
+<h3>Inputs</h3>
+
+<label>Density \(\rho\) (kg/m³):</label>
+<input id="rho" type="number" step="any" value="1.225">
+
+<label>Velocity \(U\) (m/s):</label>
+<input id="U" type="number" step="any">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Results</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function calculate() {
+
+  const rho =
+    parseFloat(document.getElementById("rho").value);
+
+  const U =
+    parseFloat(document.getElementById("U").value);
+
+  const q =
+    0.5 * rho * U * U;
+
+  document.getElementById("results").innerHTML =
+
+    "<strong>Dynamic pressure:</strong> " +
+    q.toFixed(3) + " Pa";
+
+}
+
+</script>
+
+</body>
+</html>

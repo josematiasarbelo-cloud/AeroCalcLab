@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Drag Coefficient Calculator</title>
+
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      chtml: {
+        displayAlign: "left",
+        displayIndent: "0em"
+      }
+    };
+  </script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+  <h1>Drag Coefficient Calculator</h1>
+
+  <p class="module-description">
+    Compute the drag coefficient \(C_D\) from measured drag force,
+    fluid density, flow velocity, and reference area.
+    The drag coefficient is a non-dimensional parameter widely used
+    in aerodynamics to characterize the resistance of a body moving
+    through a fluid.
+  </p>
+
+  <p><a href="../modules/engineering.html">← Back to Engineering Tools</a></p>
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+C_D =
+\frac{D}
+{\frac{1}{2}\rho U^2 A}
+\]
+
+<hr>
+
+<label>Drag force \(D\) (N):</label>
+<input id="D" type="number" step="any">
+
+<label>Density \(\rho\) (kg/m³):</label>
+<input id="rho" type="number" step="any" value="1.225">
+
+<label>Velocity \(U\) (m/s):</label>
+<input id="U" type="number" step="any">
+
+<label>Reference area \(A\) (m²):</label>
+<input id="A" type="number" step="any">
+
+<button onclick="calculateCD()">Calculate</button>
+
+<h3>Result</h3>
+
+<p id="result"></p>
+
+</section>
+
+</main>
+
+<script>
+function calculateCD() {
+
+  const D = parseFloat(document.getElementById("D").value);
+  const rho = parseFloat(document.getElementById("rho").value);
+  const U = parseFloat(document.getElementById("U").value);
+  const A = parseFloat(document.getElementById("A").value);
+
+  const q = 0.5 * rho * U * U;
+
+  const CD = D / (q * A);
+
+  document.getElementById("result").innerHTML =
+    "<strong>C<sub>D</sub> = </strong>" + CD.toFixed(4);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Atmosphere Calculator</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header><h1>Atmospheric Conditions</h1></header>
+
+<main>
+<section class="card">
+
+<h3>Formulas (ISA)</h3>
+
+\[
+T = T_0 - Lh
+\]
+
+\[
+p = p_0 \left(\frac{T}{T_0}\right)^{\frac{g}{RL}}
+\]
+
+\[
+\rho = \frac{p}{RT}
+\]
+
+<hr>
+
+<label>Altitude (m):</label>
+<input id="h">
+
+<button onclick="calc()">Calculate</button>
+
+<p id="out"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const h = parseFloat(document.getElementById("h").value);
+
+  const T0 = 288.15;
+  const p0 = 101325;
+  const g = 9.80665;
+  const R = 287.05;
+  const L = 0.0065;
+
+  const T = T0 - L * h;
+  const p = p0 * Math.pow(T / T0, g / (R * L));
+  const rho = p / (R * T);
+
+  document.getElementById("out").innerText =
+    `T=${T.toFixed(2)} K, p=${p.toFixed(0)} Pa, ρ=${rho.toFixed(3)} kg/m³`;
+}
+</script>
+
+</body>
+</html>

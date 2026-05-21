@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CFD Domain Dimensions</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: {
+    displayAlign: "left",
+    displayIndent: "0em"
+  }
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+.reference-image {
+  width: 100%;
+  max-width: 700px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>CFD Domain Dimensions</h1>
+
+<p class="module-description">
+  Estimate recommended computational domain dimensions for external
+  aerodynamic CFD simulations using commonly adopted best-practice
+  guidelines for atmospheric and bluff-body flows.
+</p>
+
+<p>
+Based on recommendations from:
+<br><br>
+
+Franke et al. (2007)<br>
+Tominaga et al. (2008)<br>
+Blocken et al. (2015)
+</p>
+
+<p><a href="../modules/engineering.html">← Back to Engineering Tools</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Reference Geometry</h3>
+
+<img src="../comp-domain.png" alt="CFD domain dimensions reference"
+class="reference-image">
+
+<hr>
+
+<h3>Guidelines</h3>
+
+\[
+H_{domain} = 6h
+\]
+
+\[
+W_{domain} = 12h
+\]
+
+\[
+L_{upstream} = 5h
+\]
+
+\[
+L_{downstream} = 20h
+\]
+
+<hr>
+
+<h3>Input</h3>
+
+<label>Object height \(h\) (m):</label>
+<input id="h" type="number" step="any">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Results</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function calculate() {
+
+  const h =
+    parseFloat(document.getElementById("h").value);
+
+  const Hdomain = 6 * h;
+  const Wdomain = 12 * h;
+  const Lupstream = 5 * h;
+  const Ldownstream = 20 * h;
+
+  const Ltotal =
+    Lupstream + h + Ldownstream;
+
+  document.getElementById("results").innerHTML =
+
+    "<strong>Computational domain height:</strong> " +
+    Hdomain.toFixed(3) + " m<br><br>" +
+
+    "<strong>Computational domain width:</strong> " +
+    Wdomain.toFixed(3) + " m<br><br>" +
+
+    "<strong>Upstream fetch:</strong> " +
+    Lupstream.toFixed(3) + " m<br><br>" +
+
+    "<strong>Downstream fetch:</strong> " +
+    Ldownstream.toFixed(3) + " m<br><br>" +
+
+    "<strong>Approximate total streamwise length:</strong> " +
+    Ltotal.toFixed(3) + " m";
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cd Standard Atmosphere Correction</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>Cd Standard Atmosphere Correction</h1>
+<p class="module-description">
+  Convert a drag coefficient measured at one air density to an equivalent
+  drag coefficient based on standard atmospheric density. This is useful when
+  comparing data measured under different atmospheric conditions.
+</p>
+<p><a href="../modules/wind-tunnel-correction.html">← Back to Wind Tunnel Correction</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+C_{D,std} = C_{D,meas}\frac{\rho_{meas}}{\rho_{std}}
+\]
+
+<hr>
+
+<label>Measured drag coefficient \(C_{D,meas}\):</label>
+<input id="CD" type="number" step="any">
+
+<label>Measured density \(\rho_{meas}\) (kg/m³):</label>
+<input id="rhoMeas" type="number" step="any" value="1.225">
+
+<label>Standard density \(\rho_{std}\) (kg/m³):</label>
+<input id="rhoStd" type="number" step="any" value="1.225">
+
+<button onclick="calc()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const CD = parseFloat(document.getElementById("CD").value);
+  const rhoMeas = parseFloat(document.getElementById("rhoMeas").value);
+  const rhoStd = parseFloat(document.getElementById("rhoStd").value);
+
+  const CDstd = CD * rhoMeas / rhoStd;
+
+  document.getElementById("result").innerHTML =
+    "<strong>C<sub>D,std</sub> = </strong>" + CDstd.toFixed(5);
+}
+</script>
+
+</body>
+</html>

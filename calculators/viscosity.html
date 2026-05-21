@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Air Viscosity</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header><h1>Sutherland’s Law</h1></header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+\mu = \mu_0 \left(\frac{T}{T_0}\right)^{3/2}
+\frac{T_0 + S}{T + S}
+\]
+
+<hr>
+
+<label>Temperature T (K):</label>
+<input id="T">
+
+<button onclick="calc()">Calculate</button>
+
+<p id="out"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const T = parseFloat(document.getElementById("T").value);
+
+  const mu0 = 1.716e-5;
+  const T0 = 273.15;
+  const S = 110.4;
+
+  const mu = mu0 * Math.pow(T / T0, 1.5) * (T0 + S) / (T + S);
+
+  document.getElementById("out").innerText = "μ = " + mu.toExponential(3) + " Pa·s";
+}
+</script>
+
+</body>
+</html>

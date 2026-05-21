@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reynolds Number</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header><h1>Reynolds Number</h1></header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+Re = \frac{\rho U L}{\mu} = \frac{U L}{\nu}
+\]
+
+<hr>
+
+<label>Velocity U (m/s):</label>
+<input id="U">
+
+<label>Length L (m):</label>
+<input id="L">
+
+<label>Density ρ (kg/m³):</label>
+<input id="rho" value="1.225">
+
+<label>Dynamic viscosity μ (Pa·s):</label>
+<input id="mu" value="1.81e-5">
+
+<button onclick="calc()">Calculate</button>
+
+<p id="out"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const U = parseFloat(document.getElementById("U").value);
+  const L = parseFloat(document.getElementById("L").value);
+  const rho = parseFloat(document.getElementById("rho").value);
+  const mu = parseFloat(document.getElementById("mu").value);
+
+  const Re = (rho * U * L) / mu;
+
+  document.getElementById("out").innerText = "Re = " + Re.toExponential(3);
+}
+</script>
+
+</body>
+</html>

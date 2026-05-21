@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Y+ Calculator</title>
+  <link rel="stylesheet" href="../style.css">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      chtml: { displayAlign: "left", displayIndent: "0em" }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header><h1>Y⁺ Calculator</h1></header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+y^+ = \frac{u_\tau y}{\nu}
+\]
+
+<hr>
+
+<label>uτ:</label>
+<input id="utau">
+
+<label>y:</label>
+<input id="y">
+
+<label>ν:</label>
+<input id="nu" value="1.5e-5">
+
+<button onclick="calc()">Calculate</button>
+
+<p id="out"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const utau = parseFloat(document.getElementById("utau").value);
+  const y = parseFloat(document.getElementById("y").value);
+  const nu = parseFloat(document.getElementById("nu").value);
+
+  const yplus = (utau * y) / nu;
+
+  document.getElementById("out").innerText = "y+ = " + yplus.toFixed(2);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CFU Calculator</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: {
+    displayAlign: "left",
+    displayIndent: "0em"
+  }
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>CFU Calculator</h1>
+
+<p class="module-description">
+Calculate the Convective Flow Unit (CFU), a characteristic
+convective timescale commonly used in transient CFD and LES
+simulations to define initialization and statistical sampling
+durations.
+<br><br>
+
+The CFU represents the time required for the flow to convect
+over a characteristic length scale.
+<br><br>
+
+Typically:
+<ul>
+  <li>~10 CFUs are used for transient initialization</li>
+  <li>~30 CFUs are used for statistical sampling</li>
+</ul>
+
+</p>
+
+<p><a href="../modules/engineering.html">← Back to Engineering Tools</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formulas</h3>
+
+\[
+CFU =
+\frac{
+L_{cyclist}
+}{
+U_\infty
+}
+\]
+
+<p>
+where:
+</p>
+
+<ul>
+  <li>\(L_{cyclist}\): characteristic cyclist length</li>
+  <li>\(U_\infty\): freestream velocity</li>
+</ul>
+
+<p>
+The number of timesteps per CFU is:
+</p>
+
+\[
+N =
+\frac{
+CFU
+}{
+\Delta t
+}
+\]
+
+<hr>
+
+<h3>Inputs</h3>
+
+<label>Characteristic length \(L_{cyclist}\) (m):</label>
+<input id="L" type="number" step="any">
+
+<label>Freestream velocity \(U_\infty\) (m/s):</label>
+<input id="U" type="number" step="any">
+
+<label>Timestep \(\Delta t\) (s):</label>
+<input id="dt" type="number" step="any">
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Results</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function calculate() {
+
+  const L =
+    parseFloat(document.getElementById("L").value);
+
+  const U =
+    parseFloat(document.getElementById("U").value);
+
+  const dt =
+    parseFloat(document.getElementById("dt").value);
+
+  const CFU =
+    L / U;
+
+  const stepsPerCFU =
+    CFU / dt;
+
+  const initSteps =
+    10 * stepsPerCFU;
+
+  const statSteps =
+    30 * stepsPerCFU;
+
+  document.getElementById("results").innerHTML =
+
+    "<strong>1 CFU:</strong> " +
+    CFU.toFixed(5) + " s<br><br>" +
+
+    "<strong>Timesteps per CFU:</strong> " +
+    Math.round(stepsPerCFU) + "<br><br>" +
+
+    "<strong>Recommended initialization duration (10 CFUs):</strong> " +
+    Math.round(initSteps) + " timesteps<br><br>" +
+
+    "<strong>Recommended statistical sampling duration (30 CFUs):</strong> " +
+    Math.round(statSteps) + " timesteps";
+
+}
+
+</script>
+
+</body>
+</html>

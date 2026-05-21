@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reynolds Number</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header><h1>Mach Number</h1></header>
+
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+Ma = \frac{U}{a}, \quad a = \sqrt{\gamma R T}
+\]
+
+<hr>
+
+<label>Velocity U:</label>
+<input id="U">
+
+<label>Temperature T (K):</label>
+<input id="T">
+
+<button onclick="calc()">Calculate</button>
+
+<p id="out"></p>
+
+</section>
+
+<script>
+function calc() {
+  const U = parseFloat(document.getElementById("U").value);
+  const T = parseFloat(document.getElementById("T").value);
+
+  const gamma = 1.4;
+  const R = 287.05;
+
+  const a = Math.sqrt(gamma * R * T);
+  const Ma = U / a;
+
+  document.getElementById("out").innerText = "Ma = " + Ma.toFixed(3);
+}
+</script>
+
+</body>
+</html>

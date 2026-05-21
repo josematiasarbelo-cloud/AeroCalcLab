@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Apparent Wind Calculator</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: {
+    displayAlign: "left",
+    displayIndent: "0em"
+  }
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+
+<h1>Apparent Wind Calculator</h1>
+
+<p class="module-description">
+  Calculate apparent wind speed and yaw angle using either
+  orthogonal wind components or wind magnitude and direction.
+</p>
+
+<p><a href="../modules/cycling-specific.html">← Back to Cycling Specific</a></p>
+
+</header>
+
+<main>
+
+<section class="card">
+
+<h3>Formulas</h3>
+
+<p><strong>Option 1 — Crosswind approach</strong></p>
+
+\[
+U_{app} =
+\sqrt{
+U_{rider}^2 + U_{cross}^2
+}
+\]
+
+\[
+\beta =
+\tan^{-1}
+\left(
+\frac{U_{cross}}
+{U_{rider}}
+\right)
+\]
+
+<p><strong>Option 2 — Wind magnitude + direction</strong></p>
+
+\[
+U_{\parallel} =
+U_{wind}\cos(\theta)
+\]
+
+\[
+U_{\perp} =
+U_{wind}\sin(\theta)
+\]
+
+\[
+U_{rel,\parallel} =
+U_{rider} + U_{\parallel}
+\]
+
+\[
+U_{app} =
+\sqrt{
+U_{rel,\parallel}^2 + U_{\perp}^2
+}
+\]
+
+\[
+\beta =
+\tan^{-1}
+\left(
+\frac{U_{\perp}}
+{U_{rel,\parallel}}
+\right)
+\]
+
+<hr>
+
+<h3>Inputs</h3>
+
+<label>Calculation method:</label>
+
+<select id="method" onchange="toggleInputs()">
+  <option value="crosswind">Crosswind approach</option>
+  <option value="direction">Wind magnitude + direction</option>
+</select>
+
+<!-- OPTION 1 -->
+<div id="crosswindInputs">
+
+  <label>Rider speed \(U_{rider}\) (m/s):</label>
+  <input id="Urider1" type="number" step="any">
+
+  <label>Crosswind speed \(U_{cross}\) (m/s):</label>
+  <input id="Ucross" type="number" step="any">
+
+</div>
+
+<!-- OPTION 2 -->
+<div id="directionInputs" style="display:none;">
+
+  <label>Rider speed \(U_{rider}\) (m/s):</label>
+  <input id="Urider2" type="number" step="any">
+
+  <label>Wind speed \(U_{wind}\) (m/s):</label>
+  <input id="Uwind" type="number" step="any">
+
+  <label>Wind angle \(\theta\) (degrees):</label>
+  <input id="theta" type="number" step="any">
+
+</div>
+
+<button onclick="calculate()">Calculate</button>
+
+<hr>
+
+<h3>Results</h3>
+
+<p id="results"></p>
+
+</section>
+
+</main>
+
+<script>
+
+function toggleInputs() {
+
+  const method = document.getElementById("method").value;
+
+  document.getElementById("crosswindInputs").style.display =
+    method === "crosswind" ? "block" : "none";
+
+  document.getElementById("directionInputs").style.display =
+    method === "direction" ? "block" : "none";
+
+}
+
+function calculate() {
+
+  const method = document.getElementById("method").value;
+
+  // -----------------------------
+  // OPTION 1
+  // -----------------------------
+  if (method === "crosswind") {
+
+    const Urider =
+      parseFloat(document.getElementById("Urider1").value);
+
+    const Ucross =
+      parseFloat(document.getElementById("Ucross").value);
+
+    const Uapp =
+      Math.sqrt(Urider * Urider + Ucross * Ucross);
+
+    const beta =
+      Math.atan(Ucross / Urider) * 180 / Math.PI;
+
+    document.getElementById("results").innerHTML =
+      "<strong>Apparent wind speed:</strong> " +
+      Uapp.toFixed(3) + " m/s<br><br>" +
+
+      "<strong>Yaw angle:</strong> " +
+      beta.toFixed(2) + "°";
+
+  }
+
+  // -----------------------------
+  // OPTION 2
+  // -----------------------------
+  if (method === "direction") {
+
+    const Urider =
+      parseFloat(document.getElementById("Urider2").value);
+
+    const Uwind =
+      parseFloat(document.getElementById("Uwind").value);
+
+    const thetaDeg =
+      parseFloat(document.getElementById("theta").value);
+
+    const theta =
+      thetaDeg * Math.PI / 180;
+
+    const Uparallel =
+      Uwind * Math.cos(theta);
+
+    const Uperp =
+      Uwind * Math.sin(theta);
+
+    const UrelParallel =
+      Urider + Uparallel;
+
+    const Uapp =
+      Math.sqrt(
+        UrelParallel * UrelParallel +
+        Uperp * Uperp
+      );
+
+    const beta =
+      Math.atan(Uperp / UrelParallel) * 180 / Math.PI;
+
+    document.getElementById("results").innerHTML =
+      "<strong>Parallel wind component:</strong> " +
+      Uparallel.toFixed(3) + " m/s<br><br>" +
+
+      "<strong>Crosswind component:</strong> " +
+      Uperp.toFixed(3) + " m/s<br><br>" +
+
+      "<strong>Apparent wind speed:</strong> " +
+      Uapp.toFixed(3) + " m/s<br><br>" +
+
+      "<strong>Yaw angle:</strong> " +
+      beta.toFixed(2) + "°";
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>

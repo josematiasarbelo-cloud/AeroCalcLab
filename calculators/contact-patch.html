@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact Patch Calculator</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>Contact Patch Calculator</h1>
+
+<p class="module-description">
+  Estimate the approximate tire contact patch area from vertical load and tire
+  pressure. This is a simplified static estimate useful for understanding tire
+  loading and pressure effects.
+</p>
+
+<p><a href="../modules/cycling-specific.html">← Back to Cycling Specific</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+A = \frac{F_z}{p}
+\]
+
+\[
+F_z = mg \cdot f
+\]
+
+<hr>
+
+<label>Total rider + bike mass \(m\) (kg):</label>
+<input id="m" type="number" step="any" value="80">
+
+<label>Load fraction on wheel \(f\):</label>
+<input id="f" type="number" step="any" value="0.5">
+
+<label>Tire pressure \(p\) (bar):</label>
+<input id="pbar" type="number" step="any" value="6">
+
+<button onclick="calculate()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calculate() {
+  const m = parseFloat(document.getElementById("m").value);
+  const f = parseFloat(document.getElementById("f").value);
+  const pbar = parseFloat(document.getElementById("pbar").value);
+
+  const g = 9.80665;
+  const Fz = m * g * f;
+  const p = pbar * 100000;
+  const A = Fz / p;
+
+  document.getElementById("result").innerHTML =
+    "<strong>Wheel load:</strong> " + Fz.toFixed(2) + " N<br>" +
+    "<strong>Contact patch area:</strong> " + A.toFixed(6) + " m²<br>" +
+    "<strong>Contact patch area:</strong> " + (A * 10000).toFixed(2) + " cm²";
+}
+</script>
+
+</body>
+</html>

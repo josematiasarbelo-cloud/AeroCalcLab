@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wake Blockage Correction</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>Wake Blockage Correction</h1>
+<p class="module-description">
+  Wake blockage accounts for the effective reduction in tunnel flow area caused
+  by the momentum deficit in the model wake. It is especially important for
+  bluff bodies and separated flows.
+</p>
+<p><a href="../modules/wind-tunnel-correction.html">← Back to Wind Tunnel Correction</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Generic Wake-Blockage Model</h3>
+
+\[
+\varepsilon_w = K_w C_D \frac{A_m}{A_t}
+\]
+
+\[
+U_c = U_m(1 + \varepsilon_w)
+\]
+
+<hr>
+
+<label>Wake coefficient \(K_w\):</label>
+<input id="Kw" type="number" step="any" value="0.25">
+
+<label>Drag coefficient \(C_D\):</label>
+<input id="CD" type="number" step="any">
+
+<label>Model frontal area \(A_m\) (m²):</label>
+<input id="Am" type="number" step="any">
+
+<label>Test-section area \(A_t\) (m²):</label>
+<input id="At" type="number" step="any">
+
+<label>Measured velocity \(U_m\) (m/s):</label>
+<input id="U" type="number" step="any">
+
+<button onclick="calc()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const Kw = parseFloat(document.getElementById("Kw").value);
+  const CD = parseFloat(document.getElementById("CD").value);
+  const Am = parseFloat(document.getElementById("Am").value);
+  const At = parseFloat(document.getElementById("At").value);
+  const U = parseFloat(document.getElementById("U").value);
+
+  const eps = Kw * CD * Am / At;
+  const Uc = U * (1 + eps);
+
+  document.getElementById("result").innerHTML =
+    "<strong>ε<sub>w</sub> = </strong>" + eps.toFixed(5) +
+    "<br><strong>Corrected velocity = </strong>" + Uc.toFixed(4) + " m/s";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Yaw Rotation Matrix</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: {
+    displayAlign: "left",
+    displayIndent: "0em"
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>Yaw Rotation Matrix</h1>
+
+<p class="module-description">
+  Calculate the 3×3 rotation matrix for a yaw rotation about the vertical
+  \(z\)-axis. This is useful for transforming vectors between bicycle,
+  wind, and laboratory coordinate systems.
+</p>
+
+<p><a href="../modules/cycling-specific.html">← Back to Cycling Specific</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Formula</h3>
+
+\[
+R_z(\psi) =
+\begin{bmatrix}
+\cos\psi & -\sin\psi & 0 \\
+\sin\psi & \cos\psi & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+\]
+
+<hr>
+
+<h3>Rotation Convention</h3>
+
+<p>
+Positive yaw rotation follows the right-hand rule about the
+positive \(z\)-axis:
+</p>
+
+<ul>
+  <li>
+    Positive yaw rotates the coordinate system counter-clockwise
+    when viewed from above.
+  </li>
+
+  <li>
+    A positive yaw angle rotates the \(x\)-axis toward the \(y\)-axis.
+  </li>
+</ul>
+
+
+<p>
+For example:
+</p>
+
+\[
+\psi = +90^\circ
+\]
+
+transforms:
+
+\[
+\begin{bmatrix}
+1\\
+0\\
+0
+\end{bmatrix}
+\rightarrow
+\begin{bmatrix}
+0\\
+1\\
+0
+\end{bmatrix}
+\]
+
+<p>
+meaning that the positive \(x\)-direction rotates into the
+positive \(y\)-direction.
+</p>
+
+<hr>
+
+<label>Yaw angle \(\psi\) (degrees):</label>
+<input id="yaw" type="number" step="any">
+
+<button onclick="calculate()">Calculate</button>
+
+<h3>Rotation Matrix</h3>
+<p id="matrix"></p>
+
+<h3>Optional Vector Transformation</h3>
+
+<label>Vector component \(x\):</label>
+<input id="vx" type="number" step="any" value="1">
+
+<label>Vector component \(y\):</label>
+<input id="vy" type="number" step="any" value="0">
+
+<label>Vector component \(z\):</label>
+<input id="vz" type="number" step="any" value="0">
+
+<button onclick="transformVector()">Transform Vector</button>
+
+<p id="vectorResult"></p>
+
+</section>
+</main>
+
+<script>
+let R = null;
+
+function calculate() {
+  const yawDeg = parseFloat(document.getElementById("yaw").value);
+  const psi = yawDeg * Math.PI / 180;
+
+  const c = Math.cos(psi);
+  const s = Math.sin(psi);
+
+  R = [
+    [c, -s, 0],
+    [s,  c, 0],
+    [0,  0, 1]
+  ];
+
+  document.getElementById("matrix").innerHTML =
+    "\\[" +
+    "R_z(" + yawDeg.toFixed(2) + "^\\circ) =" +
+    "\\begin{bmatrix}" +
+    c.toFixed(5) + " & " + (-s).toFixed(5) + " & 0 \\\\" +
+    s.toFixed(5) + " & " + c.toFixed(5) + " & 0 \\\\" +
+    "0 & 0 & 1" +
+    "\\end{bmatrix}" +
+    "\\]";
+
+  MathJax.typesetPromise();
+}
+
+function transformVector() {
+  if (!R) {
+    calculate();
+  }
+
+  const vx = parseFloat(document.getElementById("vx").value);
+  const vy = parseFloat(document.getElementById("vy").value);
+  const vz = parseFloat(document.getElementById("vz").value);
+
+  const xNew = R[0][0] * vx + R[0][1] * vy + R[0][2] * vz;
+  const yNew = R[1][0] * vx + R[1][1] * vy + R[1][2] * vz;
+  const zNew = R[2][0] * vx + R[2][1] * vy + R[2][2] * vz;
+
+  document.getElementById("vectorResult").innerHTML =
+    "<strong>Transformed vector:</strong><br>" +
+    "x' = " + xNew.toFixed(5) + "<br>" +
+    "y' = " + yNew.toFixed(5) + "<br>" +
+    "z' = " + zNew.toFixed(5);
+}
+</script>
+
+</body>
+</html>

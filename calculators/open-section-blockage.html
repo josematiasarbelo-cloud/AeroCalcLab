@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Open-Section Blockage Correction</title>
+<link rel="stylesheet" href="../style.css">
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+  chtml: { displayAlign: "left", displayIndent: "0em" }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header>
+<h1>Open-Section Blockage Correction</h1>
+<p class="module-description">
+  Open-section or open-jet blockage corrections account for jet expansion,
+  nozzle/collector effects, wake blockage, and test-object interference.
+  Mercker-Wiedemann is a component-based automotive open-jet correction
+  method. Maskell-style corrections are commonly used for bluff-body wake
+  blockage. Cooper-style methods are practical engineering corrections for
+  bluff bodies in closed and open wind tunnels.
+</p>
+<p><a href="../modules/wind-tunnel-correction.html">← Back to Wind Tunnel Correction</a></p>
+</header>
+
+<main>
+<section class="card">
+
+<h3>Generic Correction Framework</h3>
+
+\[
+\varepsilon = K \frac{A_m}{A_j}
+\]
+
+\[
+U_c = U_m (1 + \varepsilon)
+\]
+
+\[
+q_c = q_m (1 + \varepsilon)^2
+\]
+
+\[
+D_c = D_m (1 + \varepsilon)^2
+\]
+
+<hr>
+
+<p>
+<strong>Method notes:</strong><br>
+<strong>Mercker-Wiedemann:</strong> component-based open-jet method including
+jet expansion, collector/nozzle effects, and vehicle-induced interference.<br><br>
+
+<strong>Maskell:</strong> wake-blockage correction often used for bluff bodies
+where separated wake growth dominates the interference.<br><br>
+
+<strong>Cooper:</strong> practical bluff-body correction framework for closed
+and open wind tunnels, often used in automotive/aerodynamic testing.
+</p>
+
+<hr>
+
+<label>Method:</label>
+<select id="method">
+  <option value="mw">Mercker-Wiedemann</option>
+  <option value="maskell">Maskell</option>
+  <option value="cooper">Cooper</option>
+</select>
+
+<label>Model frontal area \(A_m\) (m²):</label>
+<input id="Am" type="number" step="any">
+
+<label>Jet / nozzle area \(A_j\) (m²):</label>
+<input id="Aj" type="number" step="any">
+
+<label>Correction coefficient \(K\):</label>
+<input id="K" type="number" step="any" value="1.0">
+
+<label>Measured value:</label>
+<input id="value" type="number" step="any">
+
+<label>Apply correction to:</label>
+<select id="target">
+  <option value="velocity">Velocity</option>
+  <option value="pressure">Dynamic pressure</option>
+  <option value="drag">Drag</option>
+</select>
+
+<button onclick="calc()">Calculate</button>
+
+<h3>Result</h3>
+<p id="result"></p>
+
+</section>
+</main>
+
+<script>
+function calc() {
+  const Am = parseFloat(document.getElementById("Am").value);
+  const Aj = parseFloat(document.getElementById("Aj").value);
+  const K = parseFloat(document.getElementById("K").value);
+  const value = parseFloat(document.getElementById("value").value);
+  const target = document.getElementById("target").value;
+  const method = document.getElementById("method").value;
+
+  const eps = K * Am / Aj;
+
+  let corrected;
+  if (target === "velocity") corrected = value * (1 + eps);
+  if (target === "pressure") corrected = value * Math.pow(1 + eps, 2);
+  if (target === "drag") corrected = value * Math.pow(1 + eps, 2);
+
+  let methodName = "";
+  if (method === "mw") methodName = "Mercker-Wiedemann";
+  if (method === "maskell") methodName = "Maskell";
+  if (method === "cooper") methodName = "Cooper";
+
+  document.getElementById("result").innerHTML =
+    "<strong>Method = </strong>" + methodName +
+    "<br><strong>ε = </strong>" + eps.toFixed(5) +
+    "<br><strong>Corrected value = </strong>" + corrected.toFixed(5);
+}
+</script>
+
+</body>
+</html>
